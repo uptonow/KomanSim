@@ -1,0 +1,39 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["komansim*", "simdata*"]
+
+[project]
+name = "komansim"
+version = "0.1.1"
+description = "KomanSim - A lightweight simulator + synthetic-data platform with swappable backends."
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = [
+  "typer>=0.12",
+  "pydantic>=2.7",
+  "pyyaml>=6.0",
+  "numpy>=1.24",
+  "imageio>=2.34",
+]
+
+[project.optional-dependencies]
+dev = ["ruff>=0.5", "pytest>=8.0"]
+# Isaac Sim backend runs inside Isaac's Python env; this extra is only for type hints or local tooling.
+isaac = []
+# Optional backend extras (install only if you need these backends)
+mujoco = ["mujoco>=3.0"]
+pybullet = ["pybullet>=3.0"]
+
+[project.scripts]
+komansim = "komansim.cli:app"
+simdata = "komansim.cli:app"
+
+[tool.ruff]
+line-length = 100
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]

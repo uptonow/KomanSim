@@ -1,0 +1,45 @@
+# Minimal job config
+# Note: backend not specified - will use --backend flag value (defaults to "dummy")
+# 
+# IMPORTANT: Asset format compatibility:
+#   - PyBullet: Use primitive://box or primitive://sphere
+#   - MuJoCo: Use .mjcf or .xml files
+#   - Isaac Sim: Use .usd, .usda, or .usdc files
+#   - Dummy: Any format (placeholder assets)
+#
+# This example uses a placeholder path. Replace with actual asset path matching your backend.
+job_name: demo_job
+out_dir: outputs/demo_job
+seed: 0
+num_frames: 20
+dt: 0.0333333
+headless: true
+width: 640
+height: 480
+
+scene:
+  usd_path: null
+  physics_dt: 0.0166667
+  dome_light_intensity: 1500.0
+
+assets:
+  - name: obj_01
+    usd_path: "PATH/TO/YOUR_ASSET.usd"  # Placeholder - replace with actual asset path matching your backend
+    semantic_label: "object"
+    scale: 1.0
+
+sensors:
+  - name: cam0
+    type: camera_rgb
+    pose:
+      p: [1.5, 1.5, 1.2]
+      q: [0.0, 0.0, 0.0, 1.0]
+    intrinsics:
+      fx: 500
+      fy: 500
+      cx: 320
+      cy: 240
+
+randomization:
+  random_xy: 0.2
+  random_yaw_deg: 180.0

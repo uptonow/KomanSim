@@ -1,0 +1,103 @@
+# Isaac Sim Backend Test Job: Warehouse Bin Picking Scenario
+# B2B Use Case: Robot Project Manager - Synthetic Data Generation for Object Detection
+#
+# Scenario: Generate training data for a robotic arm performing bin picking
+# in a warehouse environment. Multiple objects are placed in a bin with
+# randomization to create diverse training data for perception models.
+#
+# IMPORTANT: This must run inside Isaac Sim's Python environment:
+#   Linux: /path/to/isaac-sim/python.sh -m simdata.cli run --backend isaac_sim --config examples/configs/job_isaac_sim_robot_pm.yaml
+#   Windows: C:\path\to\isaac-sim\python.bat -m simdata.cli run --backend isaac_sim --config examples/configs/job_isaac_sim_robot_pm.yaml
+#
+# Usage:
+#   simdata validate examples/configs/job_isaac_sim_robot_pm.yaml
+#   # Then run with Isaac Sim's Python (see above)
+#   # Note: backend is specified in config, so --backend flag must match
+
+job_name: isaac_sim_warehouse_bin_picking
+out_dir: outputs/isaac_sim_warehouse_bin_picking
+backend: isaac_sim  # Backend specified in config - must match --backend flag
+seed: 42
+num_frames: 100
+dt: 0.0333333  # 30 FPS
+headless: true
+width: 1280
+height: 720
+
+scene:
+  # For Isaac Sim, usd_path should point to USD stage file (or null for default stage)
+  usd_path: null
+  physics_dt: 0.0166667  # 60 Hz physics
+  dome_light_intensity: 2000.0  # Bright warehouse lighting
+
+assets:
+  # Bin container
+  - name: storage_bin
+    usd_path: "assets/warehouse/storage_bin.usd"
+    semantic_label: "container"
+    scale: 1.0
+
+  # Objects in bin (typical warehouse items)
+  - name: box_small
+    usd_path: "assets/warehouse/box_small.usd"
+    semantic_label: "box"
+    scale: 1.0
+
+  - name: box_medium
+    usd_path: "assets/warehouse/box_medium.usd"
+    semantic_label: "box"
+    scale: 1.0
+
+  - name: cylinder_part
+    usd_path: "assets/warehouse/cylinder_part.usd"
+    semantic_label: "part"
+    scale: 1.0
+
+  - name: irregular_object
+    usd_path: "assets/warehouse/irregular_object.usd"
+    semantic_label: "part"
+    scale: 1.0
+
+sensors:
+  # Primary overhead camera (typical for bin picking)
+  - name: overhead_cam
+    type: camera_rgb
+    pose:
+      p: [0.0, 0.0, 1.5]  # Overhead view
+      q: [0.707, 0.0, 0.0, 0.707]  # Looking down (90 deg pitch)
+    intrinsics:
+      fx: 800.0
+      fy: 800.0
+      cx: 640.0
+      cy: 360.0
+
+  # Side camera for depth estimation
+  - name: side_cam
+    type: camera_depth
+    pose:
+      p: [1.2, 0.0, 0.8]  # Side view
+      q: [0.0, 0.0, 0.0, 1.0]  # Looking at bin
+    intrinsics:
+      fx: 800.0
+      fy: 800.0
+      cx: 640.0
+      cy: 360.0
+
+  # Wrist camera (robot-mounted, common in manipulation)
+  - name: wrist_cam
+    type: camera_rgb
+    pose:
+      p: [0.5, 0.5, 0.6]  # Close-up view
+      q: [-0.5, 0.5, 0.5, 0.5]  # Angled view
+    intrinsics:
+      fx: 600.0
+      fy: 600.0
+      cx: 320.0
+      cy: 240.0
+
+randomization:
+  # Randomize object positions within bin (20cm range)
+  random_xy: 0.2
+  # Randomize object orientations (full 360 degrees)
+  random_yaw_deg: 360.0
+

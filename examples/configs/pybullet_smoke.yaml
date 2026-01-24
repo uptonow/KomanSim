@@ -1,0 +1,53 @@
+# PyBullet Backend Smoke Test - Minimal Configuration
+# This is a minimal smoke test for the PyBullet backend with real rendering.
+#
+# Usage:
+#   export SIMDATA_REAL_BACKEND=1
+#   pytest tests/smoke/test_smoke_pybullet.py -v
+#   # Or run directly:
+#   simdata run --backend pybullet --config examples/configs/pybullet_smoke.yaml
+#   # Note: backend is specified in config, so --backend flag must match
+
+job_name: smoke_pybullet
+out_dir: outputs/smoke_pybullet
+backend: pybullet  # Backend specified in config - must match --backend flag
+seed: 42
+num_frames: 10
+dt: 0.0333333  # 30 FPS
+headless: true
+width: 320
+height: 240
+
+scene:
+  usd_path: null  # Will create default PyBullet scene
+  physics_dt: 0.0166667  # 60 Hz physics
+  dome_light_intensity: 1500.0
+
+assets:
+  # Two primitive test objects
+  - name: object_1
+    usd_path: "primitive://box"
+    semantic_label: "object"
+    scale: 1.0
+
+  - name: object_2
+    usd_path: "primitive://sphere"
+    semantic_label: "object"
+    scale: 1.0
+
+sensors:
+  # Single camera
+  - name: main_camera
+    type: camera_rgb
+    pose:
+      p: [2.0, 2.0, 1.5]
+      q: [0.0, 0.0, 0.0, 1.0]
+    intrinsics:
+      fx: 400.0
+      fy: 400.0
+      cx: 160.0
+      cy: 120.0
+
+randomization:
+  random_xy: 0.15  # Reduced to keep objects in camera view for smoke test
+  random_yaw_deg: 180.0
